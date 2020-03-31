@@ -1,7 +1,7 @@
 import os, json
 
 fldir = os.path.dirname(__file__)
-trialdir = os.path.join(fldir, "ShapesJSON")
+trialdir = os.path.join(fldir, "shapesjson")
 datflnm = os.path.join(fldir, "BB_ShapesData.csv")
 
 # Read trial info

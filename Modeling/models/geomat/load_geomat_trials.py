@@ -1,7 +1,7 @@
 import os, json
 
 fldir = os.path.dirname(__file__)
-trialdir = os.path.join(fldir, "GeoMatJSON")
+trialdir = os.path.join(fldir, "geomatjson")
 datflnm = os.path.join(fldir, "BB_GeoMatData.csv")
 
 # Read trial info

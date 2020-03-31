@@ -1,7 +1,7 @@
 import os, json
 
 fldir = os.path.dirname(__file__)
-trialdir = os.path.join(fldir, "BalanceJSON")
+trialdir = os.path.join(fldir, "balancejson")
 datflnm = os.path.join(fldir, "BB_BalanceData.csv")
 
 balance_trials = dict()

@@ -1,7 +1,7 @@
 import os, json
 
 fldir = os.path.dirname(__file__)
-trialdir = os.path.join(fldir, "MaterialsJSON")
+trialdir = os.path.join(fldir, "materialsjson")
 datflnm = os.path.join(fldir, "BB_MaterialsData.csv")
 
 # Read trial info
