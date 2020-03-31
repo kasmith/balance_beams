@@ -123,7 +123,7 @@ def write_joint_strat_outcomes(filename, model_function, empirical_data,
                                model_trials, fit_trials=None, n_sims=500):
     if fit_trials is None:
         fit_trials = model_trials.keys()
-    strats = ind_strat_mix_dict.values()[0]['strat_params'].keys()
+    strats = list(list(ind_strat_mix_dict.values())[0]['strat_params'].keys())
     strats.remove('guess')
     tr_mods = make_trial_models(model_function, model_trials, perc_param_dict,
                                 strats, n_times=n_sims)
@@ -169,7 +169,7 @@ def write_ind_outcomes(filename, model_function, empirical_data,
                                model_trials, fit_trials=None, n_sims=500):
     if fit_trials is None:
         fit_trials = model_trials.keys()
-    strats = ind_strat_mix_dict.values()[0].keys()
+    strats = list(list(ind_strat_mix_dict.values())[0].keys())
     strats.remove('guess')
     with open(filename, 'w') as ofl:
         ofl.write("WID,Trial,WasFit,EmpLeft,EmpBal,EmpRight,ModLeft,ModBal," +

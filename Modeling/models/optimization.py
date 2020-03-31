@@ -57,7 +57,7 @@ def revert_strat_strengths(strat_prob_dict, strat_names):
 
 # As above but deletes / fills strategies to fit strat names
 def force_revert_strat_strengths(strat_prob_dict, strat_names):
-    spd_names = strat_prob_dict.keys()
+    spd_names = list(strat_prob_dict.keys())
     spd_names.remove('guess')
     spd_strs = revert_strat_strengths(strat_prob_dict, spd_names)
     str_dict = dict([(spd_names[i], spd_strs[i]) for i in range(len(spd_names))])
