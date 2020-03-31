@@ -1,0 +1,6 @@
+n_samples: 20
+max_iter: 10
+print_iter: 5
+bal_mass: 4.0
+use_full_balance: True
+loop_repeats: 2

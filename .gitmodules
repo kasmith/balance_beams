@@ -1,0 +1,6 @@
+[submodule "OptimTools"]
+	path = OptimTools
+	url = https://github.com/kasmith/OptimTools.git
+[submodule "geometry"]
+	path = geometry
+	url = https://github.com/kasmith/geometry.git
