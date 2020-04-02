@@ -53,8 +53,9 @@ def do_run(fit, strat, db, dbsize, cores=30):
         else:
             fl.write("#SBATCH -t 2-0\n")
         fl.write("#SBATCH --array=[0-" + str(dbsize-1) + "]\n\n")
+        fl.write("IDX=$(($SLURM_ARRAY_TASK_ID-1))")
         fl.write("python run_crossval_strat.py -d -c run -f " + fit +
-                 " -s " + strat + " -n $SLURM_ARRAY_TASK_ID -i " + ifnm)
+                 " -s " + strat + " -n $IDX -i " + ifnm)
         if strat == "rules" and (fit == "joint_percept" or fit == "individual"):
             fl.write(" --single_strat")
         fl.write(" --hdf " + db)
