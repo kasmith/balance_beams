@@ -52,7 +52,7 @@ def do_run(fit, strat, db, dbsize, cores=30):
             fl.write("#SBATCH -t 7-0\n")
         else:
             fl.write("#SBATCH -t 2-0\n")
-        fl.write("#SBATCH --array=[0-" + str(dbsize-1) + "]\n\n")
+        fl.write("#SBATCH --array=[1-" + str(dbsize) + "]\n\n")
         fl.write("IDX=$(($SLURM_ARRAY_TASK_ID-1))")
         fl.write("python run_crossval_strat.py -d -c run -f " + fit +
                  " -s " + strat + " -n $IDX -i " + ifnm)
