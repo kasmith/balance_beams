@@ -132,13 +132,13 @@ if __name__ == '__main__':
                                     "output", output_folder, strat_nm+"_all")
         elif args.fit_type == 'joint_strats':
             ofl_base = os.path.join(os.path.dirname(os.path.realpath(__file__)),
-                                    "output", output_folder, strat_nm+"_jointstrat")
+                                    "output", output_folder, strat_nm+"_joint_strat")
         elif args.fit_type == 'joint_percept':
             ofl_base = os.path.join(os.path.dirname(os.path.realpath(__file__)),
-                                    "output", output_folder, strat_nm+"_jointpercept")
+                                    "output", output_folder, strat_nm+"_joint_percept")
         elif args.fit_type == "individual":
             ofl_base = os.path.join(os.path.dirname(os.path.realpath(__file__)),
-                                    "output", output_folder, strat_nm+"_ind")
+                                    "output", output_folder, strat_nm+"_individual")
         elif args.fit_type == 'joint_halfstrat':
             ofl_base = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                                     "output", output_folder, strat_nm+"_halfstrat")

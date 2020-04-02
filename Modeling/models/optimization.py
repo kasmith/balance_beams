@@ -245,7 +245,7 @@ def optimize_complete(model_function_dict, model_trials_dict,
 
 
 
-def optimize_joint_strats_complete(model_function_dict, model_trials_dict,
+def optimize_joint_perc_complete(model_function_dict, model_trials_dict,
                       empirical_data_dict, fit_params_perc,
                       perc_param_names_dict, strategies=ALL_MOD_TYPES,
                       initial_params_perc=None, init_strat_params = None,
@@ -416,7 +416,7 @@ def _joint_strat_recomb_params(key_list, params):
         ret[mod][wid][paramname] = p
     return ret
 
-def optimize_joint_perc_complete(model_function_dict, model_trials_dict,
+def optimize_joint_strats_complete(model_function_dict, model_trials_dict,
                       empirical_data_dict, fit_params_perc,
                       perc_param_names_dict, strategies=ALL_MOD_TYPES,
                       initial_params_perc=None, init_strat_params = None,

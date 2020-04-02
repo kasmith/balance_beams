@@ -9,8 +9,30 @@ import json
 import warnings
 import numpy as np
 import copy
-from run_combined_strats_all import strategy_types, fitpars, models, params, trials, empdat, rule_models
+from run_combined_strats_all import strategy_types
 from OptimTools import async_map
+
+fitpars = ['com_u', 'com_range', 'beam_mass_mean', 'com_range_s',
+           'com_range_vs', 'com_range_m', 'com_range_l', 'mass_jnd',
+           'dist_jnd', 'distance_u', 'tower_mass_u']
+models = {'sh': model_shapes,
+          'mat': model_materials,
+          'bal': model_balance}
+rule_models = {'sh': rules_shapes,
+               'mat': rules_materials,
+               'bal': rules_balance}
+params = {'sh': shapes_param_names,
+          'mat': materials_param_names,
+          'bal': balance_param_names}
+trials = {'sh': shapes_trials,
+          'mat': materials_trials,
+          'bal': balance_trials}
+empdat = {'sh': shapes_empirical,
+          'mat': materials_empirical,
+          'bal': balance_empirical}
+orders = {'sh': shapes_emp_order,
+          'mat': materials_emp_order,
+          'bal': balance_emp_order}
 
 """Some clean-up to get commonly used variables"""
 mod_names = models.keys()
@@ -56,6 +78,9 @@ def _split_trials(triallist):
     items_out = [triallist[i] for i in range(len(triallist)) if i not in idx_in]
     return items_in, items_out
 
+# Shortcut for turning dict keys into something writeable by hdf55
+def _keywrite(d):
+    return np.array(list(d.keys()), dtype='string_')
 
 def _make_database(filename, size=50):
     assert not os.path.exists(filename), "Database exists -- cannot overwrite"
@@ -70,9 +95,9 @@ def _make_database(filename, size=50):
             tlist_fit = subspl.create_group('fit')
             tlist_cv = subspl.create_group('crossval')
             for m in mod_names:
-                tin, tout = _split_trials(trials[m].keys())
-                tlist_fit[m] = tin
-                tlist_cv[m] = tout
+                tin, tout = _split_trials(list(trials[m].keys()))
+                tlist_fit[m] = np.array(tin, dtype='string_')
+                tlist_cv[m] = np.array(tout, dtype='string_')
         # Make the shell for the fitting
         for fch in fit_choices:
             ch_group = fit.create_group(fch)
@@ -81,6 +106,13 @@ def _make_database(filename, size=50):
                 for i in range(size):
                     si = str(i)
                     st_group.create_group(si)
+            fg = f['fitting'][fch]
+            for stype in strategy_types:
+                if stype not in fg.keys():
+                    st_group = fg.create_group(stype)
+                    for i in range(size):
+                        si = str(i)
+                        st_group.create_group(si)
     # Close the database and return
     return
 
@@ -310,7 +342,7 @@ def _get_ind_llh(model_function, trials, perc_params, mix_params, param_names,
     use_param = dict([(fp, prm) for fp, prm in perc_params.items()
                       if fp in param_names])
     use_trials = list(set(trials.keys()) & set(empdat.keys()))
-    strategies = mix_params.keys()
+    strategies = list(mix_params.keys())
     if 'guess' in strategies:
         strategies.remove('guess')
     def _get_itrial(trnm):
@@ -384,6 +416,11 @@ if __name__ == "__main__":
         h5_file = _check_file_consistency(args.hdf, args.number,
                                           args.fit_type, args.strategy)
         fit_trials, cv_trials = _retrieve_trial_splits(h5_file, args.number)
+        # Needs to encode as strings
+        for m in mod_names:
+            fit_trials[m] = np.array(fit_trials[m], dtype='str')
+            cv_trials[m] = np.array(cv_trials[m], dtype='str')
+
         h5_file.close()
 
         if not args.nodebug:
@@ -424,15 +461,15 @@ if __name__ == "__main__":
                     g = f['fitting'][args.fit_type][strat_nm][str(args.number)]
                     g['llh_fit'] = fit_llh
                     g['llh_cv'] = cv_llh
-                    g['percept_keys'] = perc_params.keys()
-                    g['percept_values'] = perc_params.values()
-                    g['strat_keys'] = strat_mix.keys()
-                    g['strat_values'] = strat_mix.values()
+                    g['percept_keys'] = _keywrite(perc_params)
+                    g['percept_values'] = list(perc_params.values())
+                    g['strat_keys'] = _keywrite(strat_mix)
+                    g['strat_values'] = list(strat_mix.values())
 
             acquire_lock(lock_name, _write)
 
-        elif args.fit_type == "joint_strats":
-            perc_params, ind_strats, fit_llh = optimize_joint_strats_complete(models,
+        elif args.fit_type == "joint_percept":
+            perc_params, ind_strats, fit_llh = optimize_joint_perc_complete(models,
                                                             fit_tr_dict,
                                                             empdat, fitpars,
                                                             params, strategies,
@@ -462,21 +499,21 @@ if __name__ == "__main__":
                     g = f['fitting'][args.fit_type][strat_nm][str(args.number)]
                     g['llh_fit'] = fit_llh
                     g['llh_cv'] = cv_llh
-                    g['percept_keys'] = perc_params.keys()
-                    g['percept_values'] = perc_params.values()
+                    g['percept_keys'] = _keywrite(perc_params)
+                    g['percept_values'] = list(perc_params.values())
                     sm_g = g.create_group("participants")
                     for mod in mod_names:
                         for wid in empdat[mod].keys():
                             w_g = sm_g.create_group(wid)
                             w_g['model'] = mod
-                            w_g['strat_keys'] = ind_strats[wid]['strat_params'].keys()
-                            w_g['strat_values'] = ind_strats[wid]['strat_params'].values()
+                            w_g['strat_keys'] = _keywrite(ind_strats[wid]['strat_params'])
+                            w_g['strat_values'] = list(ind_strats[wid]['strat_params'].values())
                             w_g['llh_cv'] = cv_by_ind[wid]
 
             acquire_lock(lock_name, _write)
 
-        elif args.fit_type == "joint_percept":
-            ind_perc, strat_mix, fit_llh = optimize_joint_perc_complete(models,
+        elif args.fit_type == "joint_strats":
+            ind_perc, strat_mix, fit_llh = optimize_joint_strats_complete(models,
                                                             fit_tr_dict,
                                                             empdat, fitpars,
                                                             params, strategies,
@@ -488,35 +525,37 @@ if __name__ == "__main__":
                                                             savestate=sstate)
             fit_llh *= -1
             cv_tasks = []
+            attch_wids = []
             for mod in mod_names:
                 iperc_mod = ind_perc[mod]
                 for wid, perc_params in iperc_mod.items():
                     cv_tasks.append([models[mod], cv_tr_dict[mod], perc_params,
                                      params[mod], empdat[mod][wid]])
+                    attch_wids.append(wid)
             def _do_cv(pars):
                 mod_fn, cv_trs, ppars, pnames, edat = pars
                 return _get_ind_llh(mod_fn, cv_trs, ppars, strat_mix, pnames,
                                     edat, nsims, 1)
             if ncore == 1:
-                icv_llh = map(_do_cv, cv_tasks)
+                icv_llh = list(map(_do_cv, cv_tasks))
             else:
-                icv_llh = async_map(_do_cv, cv_tasks, ncore)
-            cv_by_ind = dict([w, l] for w, l in zip(iperc_mod.keys(), icv_llh))
+                icv_llh = list(async_map(_do_cv, cv_tasks, ncore))
+            cv_by_ind = dict([w, l] for w, l in zip(attch_wids, icv_llh))
             cv_llh = sum(icv_llh)
             def _write():
                 with h5py.File(args.hdf, 'a') as f:
                     g = f['fitting'][args.fit_type][strat_nm][str(args.number)]
                     g['llh_fit'] = fit_llh
                     g['llh_cv'] = cv_llh
-                    g['strat_keys'] = strat_mix.keys()
-                    g['strat_values'] = strat_mix.values()
+                    g['strat_keys'] = _keywrite(strat_mix)
+                    g['strat_values'] = list(strat_mix.values())
                     sm_g = g.create_group("participants")
                     for mod in mod_names:
                         for wid in empdat[mod].keys():
                             w_g = sm_g.create_group(wid)
                             w_g['model'] = mod
-                            w_g['percept_keys'] = ind_perc[mod][wid].keys()
-                            w_g['percept_values'] = ind_perc[mod][wid].values()
+                            w_g['percept_keys'] = _keywrite(ind_perc[mod][wid])
+                            w_g['percept_values'] = list(ind_perc[mod][wid].values())
                             w_g['llh_cv'] = cv_by_ind[wid]
             acquire_lock(lock_name, _write)
 
@@ -534,12 +573,14 @@ if __name__ == "__main__":
                                                         enforce_single_strat=args.single_strat)
             fit_llh *= -1
             cv_tasks = []
+            attch_wids = []
             for mod in mod_names:
                 iperc_mod = ind_perc[mod]
                 for wid, perc_params in iperc_mod.items():
                     cv_tasks.append([models[mod], cv_tr_dict[mod], perc_params,
                                      ind_strat[wid], params[mod],
                                      empdat[mod][wid]])
+                    attch_wids.append(wid)
             def _do_cv(pars):
                 mod_fn, cv_trs, ppars, pstrat, pnames, edat = pars
                 return _get_ind_llh(mod_fn, cv_trs, ppars, pstrat, pnames,
@@ -548,7 +589,8 @@ if __name__ == "__main__":
                 icv_llh = map(_do_cv, cv_tasks)
             else:
                 icv_llh = async_map(_do_cv, cv_tasks, ncore)
-            cv_by_ind = dict([w, l] for w, l in zip(iperc_mod.keys(), icv_llh))
+            icv_llh = list(icv_llh)
+            cv_by_ind = dict([w, l] for w, l in zip(attch_wids, icv_llh))
             cv_llh = sum(icv_llh)
             def _write():
                 with h5py.File(args.hdf, 'a') as f:
@@ -558,11 +600,13 @@ if __name__ == "__main__":
                     sm_g = g.create_group("participants")
                     for mod in mod_names:
                         for wid in empdat[mod].keys():
+                            #if wid == 'A10DEO061A6L3O:33CUSNVVNOWUUPE407HDJUVPXQV883':
+                            #    import pdb; pdb.set_trace
                             w_g = sm_g.create_group(wid)
                             w_g['model'] = mod
-                            w_g['percept_keys'] = ind_perc[mod][wid].keys()
-                            w_g['percept_values'] = ind_perc[mod][wid].values()
-                            w_g['strat_keys'] = ind_strat[wid].keys()
-                            w_g['strat_values'] = ind_strat[wid].values()
+                            w_g['percept_keys'] = _keywrite(ind_perc[mod][wid])
+                            w_g['percept_values'] = list(ind_perc[mod][wid].values())
+                            w_g['strat_keys'] = _keywrite(ind_strat[wid])
+                            w_g['strat_values'] = list(ind_strat[wid].values())
                             w_g['llh_cv'] = cv_by_ind[wid]
             acquire_lock(lock_name, _write)

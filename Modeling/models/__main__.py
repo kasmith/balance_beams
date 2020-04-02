@@ -60,8 +60,8 @@ parser.add_argument('--simulations', help="The number of simulations to run", ty
 args = parser.parse_args()
 
 if __name__ == '__main__':
-    print 'Arguments:'
-    print args
+    print ('Arguments:')
+    print (args)
 
     if args.type == 'shapes':
         package = shapes_package
