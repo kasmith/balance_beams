@@ -62,7 +62,7 @@ def do_run(fit, strat, db, dbsize, cores=30):
         fl.flush()
         fnm = fl.name
         os.system('cat ' + fnm)
-        os.system('sbatch + ' fnm)
+        os.system('sbatch ' + fnm)
 
 if __name__ == '__main__':
     args = parser.parse_args()
