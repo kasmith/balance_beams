@@ -23,7 +23,7 @@ shorten = {"all": "A", "joint_strats": "JS", "joint_percept": "JP",
            "individual": "I"}
 
 """ Parse command line arguments """
-parser = argparse.ArgumenParser(description="Run cross-validation on models on SLURM")
+parser = argparse.ArgumentParser(description="Run cross-validation on models on SLURM")
 parser.add_argument('-s', '--strategy', help="Name of strategy collection",
                     default="base_strats", choices=strategy_types.keys())
 parser.add_argument('-f', '--fittype', help="Name of the fit type",
