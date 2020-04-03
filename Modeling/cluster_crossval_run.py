@@ -32,6 +32,8 @@ parser.add_argument('--hdf', help="Name of hdf5 database",
                     default=def_hdf5)
 parser.add_argument('--dbsize', type=int, default=50,
                     help="Number of cross-validation runs to do")
+parser.add_argument('--patch_idx', type=int, default=None,
+                    help="If set, runs a single cross-validation (in case a run fails)")
 
 
 def do_run(fit, strat, db, dbsize, cores=30):
@@ -65,6 +67,38 @@ def do_run(fit, strat, db, dbsize, cores=30):
         os.system('cat ' + fnm)
         os.system('sbatch ' + fnm)
 
+def do_patch(fit, strat, db, patchidx, cores=30):
+    # Make the input file
+    ifnm = os.path.join(input_dir, strat + "_all_params.json")
+
+    # Make and run the batch script
+    with tempfile.NamedTemporaryFile(mode="w+") as fl:
+        fl.write("#!/usr/bin/env bash\n")
+        fl.write("#SBATCH --job-name=BB_Patch_" + shorten[fit] + "_" + strat + "\n")
+        fl.write("#SBATCH --output=SlurmOut/BBPtch_" + shorten[fit] + "_" +
+                 strat + "_%A_%a.out\n")
+        fl.write("#SBATCH --output=SlurmOut/BBPtch_" + shorten[fit] + "_" +
+                 strat + "_%A_%a.err\n")
+        fl.write("#SBATCH --mem=32000\n")
+        fl.write("#SBATCH -c " + str(cores) + "\n")
+        if fit == "individual" or fit == "joint_percept" or strat == "inc_dist":
+            fl.write("#SBATCH -t 7-0\n")
+        else:
+            fl.write("#SBATCH -t 2-0\n")
+        fl.write("python run_crossval_strat.py -d -c run -f " + fit +
+                 " -s " + strat + " -n " + str(patchidx) + " -i " + ifnm)
+        if strat == "rules" and (fit == "joint_percept" or fit == "individual"):
+            fl.write(" --single_strat")
+        fl.write(" --hdf " + db)
+        fl.write('\n')
+        fl.flush()
+        fnm = fl.name
+        os.system('cat ' + fnm)
+        os.system('sbatch ' + fnm)
+
 if __name__ == '__main__':
     args = parser.parse_args()
-    do_run(args.fittype, args.strategy, args.hdf, args.dbsize)
+    if args.patch_idx is not None:
+        do_patch(args.fittype, args.strategy, args.hdf, args.patch_idx)
+    else:
+        do_run(args.fittype, args.strategy, args.hdf, args.dbsize)
