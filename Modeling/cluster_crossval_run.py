@@ -46,7 +46,7 @@ def do_run(fit, strat, db, dbsize, cores=30):
         fl.write("#SBATCH --job-name=BB_CV_" + shorten[fit] + "_" + strat + "\n")
         fl.write("#SBATCH --output=SlurmOut/BBCV_" + shorten[fit] + "_" +
                  strat + "_%A_%a.out\n")
-        fl.write("#SBATCH --output=SlurmOut/BBCV_" + shorten[fit] + "_" +
+        fl.write("#SBATCH --error=SlurmOut/BBCV_" + shorten[fit] + "_" +
                  strat + "_%A_%a.err\n")
         fl.write("#SBATCH --mem=32000\n")
         fl.write("#SBATCH -c " + str(cores) + "\n")
@@ -77,7 +77,7 @@ def do_patch(fit, strat, db, patchidx, cores=30):
         fl.write("#SBATCH --job-name=BB_Patch_" + shorten[fit] + "_" + strat + "\n")
         fl.write("#SBATCH --output=SlurmOut/BBPtch_" + shorten[fit] + "_" +
                  strat + "_%A_%a.out\n")
-        fl.write("#SBATCH --output=SlurmOut/BBPtch_" + shorten[fit] + "_" +
+        fl.write("#SBATCH --error=SlurmOut/BBPtch_" + shorten[fit] + "_" +
                  strat + "_%A_%a.err\n")
         fl.write("#SBATCH --mem=32000\n")
         fl.write("#SBATCH -c " + str(cores) + "\n")
