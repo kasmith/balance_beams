@@ -34,9 +34,11 @@ parser.add_argument('--dbsize', type=int, default=50,
                     help="Number of cross-validation runs to do")
 parser.add_argument('--patch_idx', type=int, default=None,
                     help="If set, runs a single cross-validation (in case a run fails)")
+parser.add_argument('--iterations', type=int, default=250,
+                    help="Sets number of optimization iterations")
 
 
-def do_run(fit, strat, db, dbsize, cores=30):
+def do_run(fit, strat, db, dbsize, iters, cores=30):
     # Make the input file
     ifnm = os.path.join(input_dir, strat + "_all_params.json")
 
@@ -57,7 +59,8 @@ def do_run(fit, strat, db, dbsize, cores=30):
         fl.write("#SBATCH --array=[1-" + str(dbsize) + "]\n\n")
         fl.write("IDX=$(($SLURM_ARRAY_TASK_ID-1))\n")
         fl.write("python run_crossval_strat.py -d -c run -f " + fit +
-                 " -s " + strat + " -n $IDX -i " + ifnm)
+                 " -s " + strat + " -n $IDX -i " + ifnm +
+                 " --iterations " + str(iters))
         if strat == "rules" and (fit == "joint_percept" or fit == "individual"):
             fl.write(" --single_strat")
         fl.write(" --hdf " + db)
@@ -67,7 +70,7 @@ def do_run(fit, strat, db, dbsize, cores=30):
         os.system('cat ' + fnm)
         os.system('sbatch ' + fnm)
 
-def do_patch(fit, strat, db, patchidx, cores=30):
+def do_patch(fit, strat, db, patchidx, iters, cores=30):
     # Make the input file
     ifnm = os.path.join(input_dir, strat + "_all_params.json")
 
@@ -86,7 +89,8 @@ def do_patch(fit, strat, db, patchidx, cores=30):
         else:
             fl.write("#SBATCH -t 2-0\n")
         fl.write("python run_crossval_strat.py -d -c run -f " + fit +
-                 " -s " + strat + " -n " + str(patchidx) + " -i " + ifnm)
+                 " -s " + strat + " -n " + str(patchidx) + " -i " + ifnm +
+                 " --iterations " + str(iters))
         if strat == "rules" and (fit == "joint_percept" or fit == "individual"):
             fl.write(" --single_strat")
         fl.write(" --hdf " + db)
@@ -99,6 +103,8 @@ def do_patch(fit, strat, db, patchidx, cores=30):
 if __name__ == '__main__':
     args = parser.parse_args()
     if args.patch_idx is not None:
-        do_patch(args.fittype, args.strategy, args.hdf, args.patch_idx)
+        do_patch(args.fittype, args.strategy, args.hdf,
+                 args.patch_idx, args.iterations)
     else:
-        do_run(args.fittype, args.strategy, args.hdf, args.dbsize)
+        do_run(args.fittype, args.strategy, args.hdf, args.dbsize,
+               args.iterations)

@@ -67,6 +67,8 @@ parser.add_argument('-o', '--output', default=def_of_strat,
                     help="Output csv file (only for read_llh)")
 parser.add_argument('--single_strat', action="store_true",
                     help="Whether to fix individuals to use a single strategy")
+parser.add_argument('--iterations', type=int, default=250,
+                    help="Number of SPSA iterations for fitting")
 
 """Functions that are used for getting into / out of the hdf5 database"""
 
@@ -367,12 +369,13 @@ if __name__ == "__main__":
     strat_nm = args.strategy
     comd = args.command
 
+    maxiter = args.iterations
+
     if args.nodebug:
         if args.fit_type in ['all', 'joint_strats']:
             nsims = 500
         else:
             nsims = 250
-        maxiter = 500
         printiter = 50
         ncore = 30
     else:
