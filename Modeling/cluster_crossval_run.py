@@ -54,7 +54,7 @@ def do_run(fit, strat, db, dbsize, iters, cores=30):
                  strat + "_%A_%a.err\n")
         fl.write("#SBATCH --mem=32000\n")
         fl.write("#SBATCH -c " + str(cores) + "\n")
-        if fit == "individual" or fit == "joint_percept" or strat == "inc_dist":
+        if fit == "individual" or fit == "joint_strats" or strat == "inc_dist":
             fl.write("#SBATCH -t 7-0\n")
         else:
             fl.write("#SBATCH -t 2-0\n")
@@ -63,7 +63,7 @@ def do_run(fit, strat, db, dbsize, iters, cores=30):
         fl.write("python run_crossval_strat.py -d -c run -f " + fit +
                  " -s " + strat + " -n $IDX -i " + ifnm +
                  " --iterations " + str(iters))
-        if strat == "rules" and (fit == "joint_percept" or fit == "individual"):
+        if strat == "rules" and (fit == "joint_strats" or fit == "individual"):
             fl.write(" --single_strat")
         fl.write(" --hdf " + db)
         fl.write('\n')
@@ -86,14 +86,14 @@ def do_patch(fit, strat, db, patchidx, iters, cores=30):
                  strat + "_%A_%a.err\n")
         fl.write("#SBATCH --mem=32000\n")
         fl.write("#SBATCH -c " + str(cores) + "\n")
-        if fit == "individual" or fit == "joint_percept" or strat == "inc_dist":
+        if fit == "individual" or fit == "joint_strats" or strat == "inc_dist":
             fl.write("#SBATCH -t 7-0\n")
         else:
             fl.write("#SBATCH -t 2-0\n")
         fl.write("python run_crossval_strat.py -d -c run -f " + fit +
                  " -s " + strat + " -n " + str(patchidx) + " -i " + ifnm +
                  " --iterations " + str(iters))
-        if strat == "rules" and (fit == "joint_percept" or fit == "individual"):
+        if strat == "rules" and (fit == "joint_strats" or fit == "individual"):
             fl.write(" --single_strat")
         fl.write(" --hdf " + db)
         fl.write('\n')
