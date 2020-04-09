@@ -36,6 +36,8 @@ parser.add_argument('--patch_idx', type=int, default=None,
                     help="If set, runs a single cross-validation (in case a run fails)")
 parser.add_argument('--iterations', type=int, default=250,
                     help="Sets number of optimization iterations")
+parser.add_argument('--cores', type=int, default=30,
+                    help="Sets number of cores to request")
 
 
 def do_run(fit, strat, db, dbsize, iters, cores=30):
@@ -104,7 +106,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     if args.patch_idx is not None:
         do_patch(args.fittype, args.strategy, args.hdf,
-                 args.patch_idx, args.iterations)
+                 args.patch_idx, args.iterations, args.cores)
     else:
         do_run(args.fittype, args.strategy, args.hdf, args.dbsize,
-               args.iterations)
+               args.iterations, args.cores)

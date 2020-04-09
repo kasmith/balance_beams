@@ -69,6 +69,8 @@ parser.add_argument('--single_strat', action="store_true",
                     help="Whether to fix individuals to use a single strategy")
 parser.add_argument('--iterations', type=int, default=250,
                     help="Number of SPSA iterations for fitting")
+parser.add_argument('--cores', type=int, default=30,
+                    help="Number of cores to use")
 
 """Functions that are used for getting into / out of the hdf5 database"""
 
@@ -377,7 +379,7 @@ if __name__ == "__main__":
         else:
             nsims = 250
         printiter = 50
-        ncore = 30
+        ncore = args.cores
     else:
         nsims = 10
         maxiter = 5
