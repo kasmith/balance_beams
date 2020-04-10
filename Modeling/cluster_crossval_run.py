@@ -38,11 +38,16 @@ parser.add_argument('--iterations', type=int, default=250,
                     help="Sets number of optimization iterations")
 parser.add_argument('--cores', type=int, default=30,
                     help="Sets number of cores to request")
+parser.add_argument('-b', '--base', action="store_true",
+                    help="Initialize parameters from base instead of strategy-specific")
 
 
-def do_run(fit, strat, db, dbsize, iters, cores=30):
+def do_run(fit, strat, db, dbsize, iters, cores=30, use_base_inp=False):
     # Make the input file
-    ifnm = os.path.join(input_dir, strat + "_all_params.json")
+    if use_base_inp:
+        ifnm = os.path.join(input_dir, "base_strats_all_params.json")
+    else:
+        ifnm = os.path.join(input_dir, strat + "_all_params.json")
 
     # Make and run the batch script
     with tempfile.NamedTemporaryFile(mode="w+") as fl:
@@ -72,9 +77,12 @@ def do_run(fit, strat, db, dbsize, iters, cores=30):
         os.system('cat ' + fnm)
         os.system('sbatch ' + fnm)
 
-def do_patch(fit, strat, db, patchidx, iters, cores=30):
+def do_patch(fit, strat, db, patchidx, iters, cores=30, use_base_inp=False):
     # Make the input file
-    ifnm = os.path.join(input_dir, strat + "_all_params.json")
+    if use_base_inp:
+        ifnm = os.path.join(input_dir, "base_strats_all_params.json")
+    else:
+        ifnm = os.path.join(input_dir, strat + "_all_params.json")
 
     # Make and run the batch script
     with tempfile.NamedTemporaryFile(mode="w+") as fl:
@@ -106,7 +114,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     if args.patch_idx is not None:
         do_patch(args.fittype, args.strategy, args.hdf,
-                 args.patch_idx, args.iterations, args.cores)
+                 args.patch_idx, args.iterations, args.cores, args.base)
     else:
         do_run(args.fittype, args.strategy, args.hdf, args.dbsize,
-               args.iterations, args.cores)
+               args.iterations, args.cores, args.base)
