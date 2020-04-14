@@ -57,7 +57,7 @@ def do_run(fit, strat, db, dbsize, iters, cores=30, use_base_inp=False):
                  strat + "_%A_%a.out\n")
         fl.write("#SBATCH --error=SlurmOut/BBCV_" + shorten[fit] + "_" +
                  strat + "_%A_%a.err\n")
-        fl.write("#SBATCH --mem=32000\n")
+        fl.write("#SBATCH --mem=8000\n")
         fl.write("#SBATCH -c " + str(cores) + "\n")
         if fit == "individual" or fit == "joint_strats" or strat == "inc_dist":
             fl.write("#SBATCH -t 7-0\n")
