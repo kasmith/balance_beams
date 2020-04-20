@@ -634,12 +634,14 @@ def optimize_ind(model_function_dict, model_trials_dict,
 
             def _neg_llh_from_strat(stratpar):
                 if any([i > 10000 for i in stratpar]):
-                    return 99999999999, [-99999999 for _ in range(len(strategies))]
+                    #return 99999999999, [-99999999 for _ in range(len(strategies))]
+                    return 99999999999
                 mix_dict = transform_strat_strengths(stratpar, strategies)
-                return -sum([get_ind_trial_llh_from_mix(tm_dict[tr],
+                ret = [get_ind_trial_llh_from_mix(tm_dict[tr],
                                                         mix_dict,
                                                         emp[tr])
-                             for tr in tr_use])
+                             for tr in tr_use]
+                return -sum(ret)
             if enforce_single_strat:
                 # Fix participants to a single strategy
                 n_pars = len(strategies)
