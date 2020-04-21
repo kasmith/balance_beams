@@ -34,7 +34,30 @@
 
 `sbatch OM_fit_params_comb.sbatch -s rules -f joint_strats -i output/comb_strats/rules_all_params.json --single_strat`
 
-### Use fits from basic experiments to find predictions for extension Experiments
+
+### Set up and run crossvalidation
+
+(NOTE: very computationally expensive... set up to run on SLURM cluster)
+
+`python run_crossval_strat.py -c create -n 50`
+
+For each strategy {strat} in [base_strats, comb, inc_dist, no_phys, no_sym, no_weight, just_sp, just_smp, just_phys, rules]:
+
+`python cluster_crossval_run.py -s {strat}`
+
+For each fit type {ft} in [joint_percept, joint_strats, individual]:
+
+`python cluster_crossval_run.py -f {ft}`
+`python cluster_crossval_run.py -f {ft} -s rules`
+
+(Possibly skip individual, rules... might take too long...)
+
+Now run the 'add1' parameterizations -- for {strat} in {sm, spm, s, msp, ms, mps, mp, m, psm, ps, pms, pm, p}:
+
+`python cluster_crossval_run.py -b -s add1_{strat}`
+
+
+### Run additional experiment analyses (much faster -- don't need cluster)
 
 `python run_from_parameters.py -i output/comb_strats/base_strats_all_params.json -o output/extensions_from_comb/base_strats_ferretti.csv -t ferretti -s base_strats`
 
@@ -48,16 +71,4 @@
 
 `python run_from_parameters.py -i output/comb_strats/rules_all_params.json -o output/extensions_from_comb/rules_combined.csv -t combined -s rules`
 
-### Set up and run crossvalidation (NOTE: very computationally expensive...)
-
-
-`python run_crossval_strat.py -c create -n 50`
-
-For each strategy {strat} in [base_strats, comb, inc_dist, no_phys, no_sym, no_weight, just_sp, just_smp, rules]:
-
-`python cluster_crossval_run.py -s {strat}`
-
-For each fit type {ft} in [joint_percept, joint_strat, individual]:
-
-`python cluster_crossval_run.py -f {ft}`
-`python cluster_crossval_run.py -f {ft} -s rules`
+`python run_rationality.py`

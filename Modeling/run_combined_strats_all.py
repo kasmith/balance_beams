@@ -181,8 +181,8 @@ if __name__ == '__main__':
             write_all_outcomes(onm, models[mod], empdat[mod], perc_ps, strat_mix,
                                trials[mod], n_sims=nsims)
 
-    elif args.fit_type == "joint_strats":
-        perc_params, ind_strats, llh = optimize_joint_strats_complete(models, trials, empdat, fitpars,
+    elif args.fit_type == "joint_percept":
+        perc_params, ind_strats, llh = optimize_joint_perc_complete(models, trials, empdat, fitpars,
                                                         params, strategies, iperc,
                                                         istrat, max_iters=maxiter,
                                                         print_iters=printiter,
@@ -238,8 +238,8 @@ if __name__ == '__main__':
                                       n_sims=nsims)
 
 
-    elif args.fit_type == "joint_percept":
-        ind_perc, strat_mix, llh = optimize_joint_perc_complete(models, trials, empdat, fitpars,
+    elif args.fit_type == "joint_strats":
+        ind_perc, strat_mix, llh = optimize_joint_strats_complete(models, trials, empdat, fitpars,
                                                         params, strategies, iperc,
                                                         istrat, max_iters=maxiter,
                                                         print_iters=printiter,

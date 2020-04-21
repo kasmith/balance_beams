@@ -144,6 +144,7 @@ def _retrieve_trial_splits(f, n):
 def _check_one_database(hdf_file, fit_choice, strat_type):
     g = hdf_file['fitting'][fit_choice][strat_type]
     empties = [i for i, v in g.items() if len(v.keys())==0]
+    print(fit_choice, strat_type)
     assert len(empties) != hdf_file['size'].value, "All indices empty!"
     if len(empties) > 0:
         warnings.warn("Empty indices: " + str(empties), RuntimeWarning)
