@@ -43,13 +43,35 @@ parser.add_argument('--random_split', action="store_true",
                     help="Randomly split trials in two instead of using order (for joint_halfstrat)")
 parser.add_argument('--use_learnbene', action='store_true',
                     help="Fit the learn_benefit data rather than the regular")
+parser.add_argument('--use_geomat', action='store_true',
+                    help="Fit the geomat data rather than the regular")
 
 if __name__ == '__main__':
     args = parser.parse_args()
     print ("Arguments:")
     print (args)
 
-    if not args.use_learnbene:
+    assert not (args.use_learnbene and args.use_geomat),\
+        "Cannot set learnbene and geomat!!!"
+
+    if args.use_learnbene:
+        fitpars = ['com_u', 'com_range', 'mass_jnd',
+                   'dist_jnd', 'distance_u']
+        models = {'learnbene': model_clean}
+        rule_models = {'learnbene': rules_clean}
+        params = {'learnbene': clean_param_names}
+        trials = {'learnbene': learnbene_trials}
+        empdat = {'learnbene': learnbene_empirical}
+    elif args.use_geomat:
+        assert args.strategy != 'rules', 'Rules not allowed for geomat'
+        fitpars = ['com_u', 'com_range', 'mass_jnd',
+                   'dist_jnd', 'distance_u']
+        models = {'geomat': model_geomat}
+        params = {'geomat': clean_param_names}
+        trials = {'geomat': geomat_trials}
+        empdat = {'geomat': geomat_empirical}
+
+    else:
         # Set up the normal stuff
         fitpars = ['com_u', 'com_range', 'beam_mass_mean', 'com_range_s',
                    'com_range_vs', 'com_range_m', 'com_range_l', 'mass_jnd',
@@ -74,15 +96,6 @@ if __name__ == '__main__':
         orders = {'sh': shapes_emp_order,
                   'mat': materials_emp_order,
                   'bal': balance_emp_order}
-
-    else:
-        fitpars = ['com_u', 'com_range', 'mass_jnd',
-                   'dist_jnd', 'distance_u']
-        models = {'learnbene': model_clean}
-        rule_models = {'learnbene': rules_clean}
-        params = {'learnbene': clean_param_names}
-        trials = {'learnbene': learnbene_trials}
-        empdat = {'learnbene': learnbene_empirical}
 
 
     # Cut out unneeded parameters
@@ -123,6 +136,8 @@ if __name__ == '__main__':
 
     if args.use_learnbene:
         output_folder = "learn_bene"
+    elif args.use_geomat:
+        output_folder = "geomat"
     else:
         output_folder = "comb_strats"
 

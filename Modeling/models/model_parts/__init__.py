@@ -22,4 +22,5 @@ __all__ = ['perceive_shapes', 'perceive_materials', 'perceive_balance',
            'apply_strategy_selection', 'get_one_trial_llh_from_mix',
            'get_all_trial_llh_from_mix', 'make_trial_models',
            'make_type_defs', 'get_ind_trial_llh_from_mix',
-           'model_combined', 'rules_combined']
+           'model_combined', 'rules_combined',
+           'model_geomat', 'model_all_geomat']

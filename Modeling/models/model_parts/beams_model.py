@@ -390,3 +390,30 @@ def model_all_clean(modeltrials, strats=ALL_MOD_TYPES, block_mass_u=None,
                                        com_range, mass_jnd, dist_jnd, com_u,
                                        msprt_samples, msprt_thresh, n_times, use_full_balance, type, use_dist_max)
     return mapfn(mfn, modeltrials)
+
+# Geomat - treats all materials as identical; otherwise same as clean
+
+def model_geomat(trial, strats=ALL_MOD_TYPES, block_mass_u=None, distance_u=None, com_range=1., mass_jnd=0.001,
+                dist_jnd=0.001, com_u=None, msprt_samples=1, msprt_thresh=.51, n_times = 500,
+                use_full_balance = True, type = 'smp', use_dist_max = True):
+    percepts = [perceive_materials(trial, block_mass_u, 1, None, 1, None, distance_u, com_range) \
+                for _ in range(n_times)]
+    percepts = [_precalc_com(p, com_u) for p in percepts]
+    return model_trial(percepts, strats, mass_jnd, dist_jnd,
+                       msprt_samples, msprt_thresh,
+                       use_full_balance, use_dist_max)
+
+def model_all_geomat(modeltrials, strats=ALL_MOD_TYPES, block_mass_u=None,
+                        distance_u=None, com_range=1., mass_jnd=0.001, dist_jnd=0.001,
+                        com_u=None, msprt_samples = 1, msprt_thresh = .51,
+                        n_times = 500, use_full_balance = True, type = 'smp', beam_type=None, use_dist_max=True,
+                        parallelize = True):
+    if parallelize:
+        mapfn = async_map
+    else:
+        mapfn = map
+
+    def mfn(t): return model_geomat(t, strats, block_mass_u, distance_u,
+                                       com_range, mass_jnd, dist_jnd, com_u,
+                                       msprt_samples, msprt_thresh, n_times, use_full_balance, type, use_dist_max)
+    return mapfn(mfn, modeltrials)
