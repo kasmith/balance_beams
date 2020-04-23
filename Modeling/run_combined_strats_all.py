@@ -127,7 +127,7 @@ if __name__ == '__main__':
         printiter = 1
         ncore = 1
         for m in trials.keys():
-            trials[m] = {k: trials[m][k] for k in list(trials[m].keys())[:4]}
+            trials[m] = {k: trials[m][k] for k in list(trials[m].keys())[:10]}
 
     if strat_nm == 'rules':
         strategies = ['R1', 'R2', 'R3', 'R3a', 'R4']
