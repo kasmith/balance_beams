@@ -68,7 +68,7 @@ def do_run(fit, strat, db, dbsize, iters, cores=30, use_base_inp=False):
         fl.write("python run_crossval_strat.py -d -c run -f " + fit +
                  " -s " + strat + " -n $IDX -i " + ifnm +
                  " --iterations " + str(iters))
-        if strat == "rules" and (fit == "joint_strats" or fit == "individual"):
+        if strat == "rules" and (fit == "joint_percept" or fit == "individual"):
             fl.write(" --single_strat")
         fl.write(" --hdf " + db)
         fl.write('\n')

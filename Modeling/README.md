@@ -24,6 +24,8 @@
 
 `sbatch OM_fit_params_comb.sbatch -s rules -f all -i output/comb_strats/base_strats_all_params.json`
 
+`sbatch OM_fit_params_comb.sbatch -s base_strats -f all -i output/comb_strats/base_strats_all_params.json --use_geomat`
+
 ### Fit at more individual levels:
 
 `sbatch OM_fit_params_comb.sbatch -s base_strats -f joint_strats -i output/comb_strats/base_strats_all_params.json`
@@ -34,6 +36,11 @@
 
 `sbatch OM_fit_params_comb.sbatch -s rules -f joint_strats -i output/comb_strats/rules_all_params.json --single_strat`
 
+`sbatch OM_fit_params_comb.sbatch -s rules -f joint_percept -i output/comb_strats/rules_all_params.json --single_strat`
+
+`sbatch OM_fit_params_comb.sbatch -s rules -f individual -i output/comb_strats/rules_all_params.json --single_strat`
+
+`sbatch OM_fit_params_comb.sbatch -s base_strats -f joint_percept -i output/comb_strats/base_strats_all_params.json --use_learnbene`
 
 ### Set up and run crossvalidation
 
@@ -71,4 +78,10 @@ Now run the 'add1' parameterizations -- for {strat} in {sm, spm, s, msp, ms, mps
 
 `python run_from_parameters.py -i output/comb_strats/rules_all_params.json -o output/extensions_from_comb/rules_combined.csv -t combined -s rules`
 
+### Follow-up data analysis and extraction
+
 `python run_rationality.py`
+
+`python extract_strat_bysubj.py`
+
+`python run_crossval_strat.py -c read_llh`

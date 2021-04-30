@@ -40,7 +40,7 @@ fit_choices = ["all", "joint_strats", "joint_percept", "individual"]
 def_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                        "output", "strat_crossval")
 def_hdf5 = os.path.join(def_dir, "strat_crossval.hdf5")
-def_of_strat = os.path.join(def_dir, "crossval_all_strat.csv")
+def_of_strat = os.path.join(def_dir, "all_crossval.csv")
 
 """Create the parser for reading in arguments"""
 parser = argparse.ArgumentParser(description="Run cross-validation on balance beam models")
