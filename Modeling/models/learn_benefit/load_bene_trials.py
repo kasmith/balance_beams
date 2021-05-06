@@ -69,7 +69,7 @@ datfl.close()
 
 ks = list(learnbene_empirical.keys())
 for w in ks:
-    if len(learnbene_empirical[w]) != 180 or np.median(learnbene_rts[w]) < 1000:
+    if len(learnbene_empirical[w]) != 180:
         del learnbene_empirical[w]
 
 learnbene_WIDS = list(learnbene_empirical.keys())
