@@ -18,7 +18,7 @@ strategy_types = {
     'rules': []
 }
 
-for stp in MSP_MOD_TYPES:
+for stp in ALL_MOD_TYPES:
     if stp not in ['sp', 'smp']:
         strategy_types['add1_'+stp] = ['sp', 'smp', stp]
 

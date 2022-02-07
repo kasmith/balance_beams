@@ -84,4 +84,6 @@ Now run the 'add1' parameterizations -- for {strat} in {sm, spm, s, msp, ms, mps
 
 `python extract_strat_bysubj.py`
 
+`python extract_ind_stratvsrules.py`
+
 `python run_crossval_strat.py -c read_llh`

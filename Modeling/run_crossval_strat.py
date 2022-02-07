@@ -56,7 +56,7 @@ parser.add_argument('-d', '--nodebug', help="Turns off debug mode",
 parser.add_argument('-c', '--command', required=True,
                     help="What to do with this cross-validation",
                     choices=["create", "run", "read_llh", "read_params",
-                             "read_llh_ind_vs_rules"])
+                             "read_llh_ind_vs_rules", "patch"])
 parser.add_argument('-n', '--number', type=int, default=50,
                     help=("Either the size of the database (create) or the" +
                           "index to run cross-validation on"))
@@ -120,10 +120,27 @@ def _make_database(filename, size=50):
     # Close the database and return
     return
 
+# In case a database was already created and you need to update it with new strategies... as I did at one point
+def _patch_database(filename):
+    assert os.path.exists(filename), "Database does not exist -- make one instead"
+    with h5py.File(filename, 'a') as f:
+        size = f["size"][()]
+        fit = f['fitting']
+        for fch in fit_choices:
+            ch_group = fit[fch]
+            for stype in strategy_types.keys():
+                if stype not in ch_group:
+                    st_group = ch_group.create_group(stype)
+                    for i in range(size):
+                        si = str(i)
+                        st_group.create_group(si)
+    # Close the database and return
+    return
+
 
 def _check_file_consistency(filename, n, fit_choice, strat_type):
     f = h5py.File(filename, 'r')
-    assert 0 <= n < f['size'].value
+    assert 0 <= n < f['size'][()]
     si = str(n)
     ks = f['fitting'][fit_choice][strat_type][si].keys()
     assert len(ks) == 0, "Data already written to this branch"
@@ -411,6 +428,9 @@ if __name__ == "__main__":
 
     if comd == "create":
         _make_database(args.hdf, args.number)
+
+    elif comd == "patch":
+        _patch_database(args.hdf)
 
     elif comd == "read_llh":
         write_cv_llh_all(args.hdf, args.output)
