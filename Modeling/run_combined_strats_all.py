@@ -15,6 +15,8 @@ strategy_types = {
     'just_sp': ['sp'],
     'just_smp': ['smp'],
     'just_phys': ['p'],
+    'swap_dist': ['sdp', 'sp'],
+    'add_dist': ['smp', 'sp', 'sdp', 'sdmp', 'smdp'],
     'rules': []
 }
 

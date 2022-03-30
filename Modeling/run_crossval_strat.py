@@ -56,7 +56,7 @@ parser.add_argument('-d', '--nodebug', help="Turns off debug mode",
 parser.add_argument('-c', '--command', required=True,
                     help="What to do with this cross-validation",
                     choices=["create", "run", "read_llh", "read_params",
-                             "read_llh_ind_vs_rules", "patch"])
+                             "read_llh_ind_vs_rules", "patch", "read_llh_add1"])
 parser.add_argument('-n', '--number', type=int, default=50,
                     help=("Either the size of the database (create) or the" +
                           "index to run cross-validation on"))
@@ -144,7 +144,7 @@ def _check_file_consistency(filename, n, fit_choice, strat_type):
     si = str(n)
     ks = f['fitting'][fit_choice][strat_type][si].keys()
     assert len(ks) == 0, "Data already written to this branch"
-    return f
+    return ff
 
 
 def _retrieve_trial_splits(f, n):
@@ -185,6 +185,22 @@ def cv_read_llh(filename, fit_choice, strat_type):
             fit_llh.append(dat['llh_fit'].value)
             cv_llh.append(dat['llh_cv'].value)
     return {'fit_llh': fit_llh, 'cv_llh': cv_llh}
+
+def cv_read_llh_and_strat(filename, fit_choice, strat_type):
+    assert (strat_type[:4] == 'add1'), 'Error: function only works with add1'
+    with _check_completed_database(filename, fit_choice, strat_type) as f:
+        g = f['fitting'][fit_choice][strat_type]
+        snm = strat_type[5:]
+        fit_llh = []
+        cv_llh = []
+        extstrat = []
+        for dat in [dat for dat in g.values() if len(dat.keys()) > 0]:
+            sks = [k.decode('UTF-8') for k in dat['strat_keys'].value]
+            sidx = sks.index(snm)
+            fit_llh.append(dat['llh_fit'][()])
+            cv_llh.append(dat['llh_cv'][()])
+            extstrat.append(dat['strat_values'][()][sidx])
+    return {'fit_llh': fit_llh, 'cv_llh': cv_llh, 'stratpct': extstrat}
 
 """Reads likelihood for individual workers (just cv)"""
 def cv_read_ind_llh(filename, fit_choice, strat_type):
@@ -254,6 +270,25 @@ def write_cv_llh_all(database, output_file, n=50):
                     for i in range(n):
                         ofl.write(s + ',' + ft + ',' + str(i) + ',' +
                                   str(fit_llh[i]) + ',' + str(cv_llh[i]) + '\n')
+
+"""Writes out for excess strategies"""
+def write_cv_llh_add1(database, output_file, n=50):
+    strats = [s for s in list(strategy_types.keys()) if s[:4]=='add1']
+    with open(output_file, 'w') as ofl:
+        ofl.write("Strategy,FitType,CVOrder,FitLLH,CVLLH,AddStratParam\n")
+        for s in strats:
+            llhs = cv_read_llh_and_strat(database, "all", s)
+            cv_llh = llhs['cv_llh']
+            fit_llh = llhs['fit_llh']
+            spct= llhs['stratpct']
+            if len(cv_llh) != n:
+                print ("Malformed length: " + s)
+                print ("Skipping\n")
+            else:
+                for i in range(n):
+                    ofl.write(s + ',all,' + str(i) + ',' + str(fit_llh[i]) +
+                              ',' + str(cv_llh[i]) + ',' + str(spct[i]) + '\n')
+
 
 def write_cv_llh_ind_vs_rules(database, output_file, fit_type, n=50):
     strats = ['base_strats', 'rules'] # This is only comparing base vs rules
@@ -437,6 +472,9 @@ if __name__ == "__main__":
 
     elif comd == "read_llh_ind_vs_rules":
         write_cv_llh_ind_vs_rules(args.hdf, args.output, args.fit_type)
+
+    elif comd == "read_llh_add1":
+        write_cv_llh_add1(args.hdf, args.output)
 
     elif comd == "run":
         h5_file = _check_file_consistency(args.hdf, args.number,
