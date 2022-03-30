@@ -144,7 +144,7 @@ def _check_file_consistency(filename, n, fit_choice, strat_type):
     si = str(n)
     ks = f['fitting'][fit_choice][strat_type][si].keys()
     assert len(ks) == 0, "Data already written to this branch"
-    return ff
+    return f
 
 
 def _retrieve_trial_splits(f, n):
