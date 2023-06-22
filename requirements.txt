@@ -1,0 +1,11 @@
+cffi==1.15.1
+dill==0.3.6
+filelock==3.12.2
+geometry @ git+https://github.com/kasmith/geometry.git@1bc16dbf1201e6f1e94371e301b6f892841842f8
+h5py==3.9.0
+numpy==1.25.0
+OptimTools @ git+https://github.com/kasmith/OptimTools.git@1212a66b57e335cb5a4563f23c936aba9dede56f
+pycparser==2.21
+pygame==2.4.0
+pymunk==6.4.0
+scipy==1.10.1

@@ -2,10 +2,9 @@
 Code for running and modeling balance beam experiments
 
 
-Instalation notes:
-* scipy, pygame, pymunk
-* submodules OptimTools, geometry -- install
+Quick install:
 
+> pip install -r requirements.txt
 
 Running notes:
 
