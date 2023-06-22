@@ -1,0 +1,13 @@
+*.pyc
+participants.db
+server.log
+.DS_Store
+trialdata.csv
+questiondata.csv
+eventdata.csv
+**/__pycache__/*
+.psiturk_history
+*.jpeg
+*.mp4
+*.ogg
+**/scratch*
