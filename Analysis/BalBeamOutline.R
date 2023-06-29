@@ -2,7 +2,6 @@
 #' ---
 #' title: Balance Beams -- Outline 
 #' author: Kevin A Smith
-#' date: Oct 17, 2016
 #' output:
 #'    html_document:
 #'      toc: true
@@ -39,47 +38,46 @@ source('load_bb_data.R')
 # * _agg: fit with aggregate model
 # * _ind: fit with individual strategy weights
 # * _ind_full: with individual strategy weights, but detailed by individual
-shapes_agg = loadShapesAgg('../Modeling/output/comb_strats/base_strats_all_sh.csv')
-shapes_ind = loadShapesInd('../Modeling/output/comb_strats/base_strats_individual_sh.csv')
-shapes_ind_full = loadShapesInd('../Modeling/output/comb_strats/base_strats_individual_sh.csv',T)
+shapes_agg = loadShapesAgg('../Modeling/anonymized_output/comb_strats/base_strats_all_sh.csv')
+shapes_ind = loadShapesInd('../Modeling/anonymized_output/comb_strats/base_strats_individual_sh.csv')
+shapes_ind_full = loadShapesInd('../Modeling/anonymized_output/comb_strats/base_strats_individual_sh.csv',T)
 
-materials_agg = loadMatAgg('../Modeling/output/comb_strats/base_strats_all_mat.csv')
-materials_ind = loadMatInd('../Modeling/output/comb_strats/base_strats_individual_mat.csv')
-materials_ind_full = loadMatInd('../Modeling/output/comb_strats/base_strats_individual_mat.csv', T)
+materials_agg = loadMatAgg('../Modeling/anonymized_output/comb_strats/base_strats_all_mat.csv')
+materials_ind = loadMatInd('../Modeling/anonymized_output/comb_strats/base_strats_individual_mat.csv')
+materials_ind_full = loadMatInd('../Modeling/anonymized_output/comb_strats/base_strats_individual_mat.csv', T)
 
-balance_agg = loadBalAgg('../Modeling/output/comb_strats/base_strats_all_bal.csv')
-balance_ind = loadBalInd('../Modeling/output/comb_strats/base_strats_individual_bal.csv')
-balance_ind_full = loadBalInd('../Modeling/output/comb_strats/base_strats_individual_bal.csv', T)
+balance_agg = loadBalAgg('../Modeling/anonymized_output/comb_strats/base_strats_all_bal.csv')
+balance_ind = loadBalInd('../Modeling/anonymized_output/comb_strats/base_strats_individual_bal.csv')
+balance_ind_full = loadBalInd('../Modeling/anonymized_output/comb_strats/base_strats_individual_bal.csv', T)
 
 # Fit using rule methodology - mixture of rules in aggregate
 # _ind_: fit allowing a single rule per person
-rules_shapes = loadShapesAgg('../Modeling/output/comb_strats/rules_all_sh.csv')
-rules_materials = loadMatAgg('../Modeling/output/comb_strats/rules_all_mat.csv')
-rules_balance = loadBalAgg('../Modeling/output/comb_strats/rules_all_bal.csv')
-rules_ind_shapes = loadShapesInd('../Modeling/output/comb_strats/rules_individual_sh.csv',T)
-rules_ind_mat = loadMatInd('../Modeling/output/comb_strats/rules_individual_mat.csv',T)
-rules_ind_bal = loadBalInd('../Modeling/output/comb_strats/rules_individual_bal.csv',T)
+rules_shapes = loadShapesAgg('../Modeling/anonymized_output/comb_strats/rules_all_sh.csv')
+rules_materials = loadMatAgg('../Modeling/anonymized_output/comb_strats/rules_all_mat.csv')
+rules_balance = loadBalAgg('../Modeling/anonymized_output/comb_strats/rules_all_bal.csv')
+rules_ind_shapes = loadShapesInd('../Modeling/anonymized_output/comb_strats/rules_individual_sh.csv',T)
+rules_ind_mat = loadMatInd('../Modeling/anonymized_output/comb_strats/rules_individual_mat.csv',T)
+rules_ind_bal = loadBalInd('../Modeling/anonymized_output/comb_strats/rules_individual_bal.csv',T)
 
 # Load in best fit parameters by individual
-complete_params = read.csv('../Modeling/output/ind_strat_choice.csv')
+complete_params = read.csv('../Modeling/anonymized_output/ind_strat_choice.csv')
 rules_ind_shapes = rules_ind_shapes %>% merge(complete_params %>% select(WID, Rule=rules_Rule))
 rules_ind_mat = rules_ind_mat %>% merge(complete_params %>% select(WID, Rule=rules_Rule))
 rules_ind_bal = rules_ind_bal %>% merge(complete_params %>% select(WID, Rule=rules_Rule))
 
 # For the geometric experiment
 # _geom: assumes no weight information used
-geomat_agg = loadMatAgg('../Modeling/output/extensions_from_comb/base_strats_geomat.csv', use_geomat = T)
-geomat_geom = loadMatAgg('../Modeling/output/geomat/base_strats_all_geomat.csv', use_geomat = T)
-#geomat_ind = loadMatInd('output/geomat/joint_massp_from_mat.csv', use_geomat = T)
-geomat_raw = read.csv('../Modeling/models/geomat/BB_GeoMatData.csv')
+geomat_agg = loadMatAgg('../Modeling/anonymized_output/extensions_from_comb/base_strats_geomat.csv', use_geomat = T)
+geomat_geom = loadMatAgg('../Modeling/anonymized_output/geomat/base_strats_all_geomat.csv', use_geomat = T)
+geomat_raw = read.csv('../Modeling/anonymized_output/raw_data/BB_GeoMatData.csv')
 
 # For the combination experiment
-comb_agg = loadCombAgg('../Modeling/output/extensions_from_comb/base_strats_combined.csv')
-rules_comb = loadCombAgg('../Modeling/output/extensions_from_comb/rules_combined.csv')
+comb_agg = loadCombAgg('../Modeling/anonymized_output/extensions_from_comb/base_strats_combined.csv')
+rules_comb = loadCombAgg('../Modeling/anonymized_output/extensions_from_comb/rules_combined.csv')
 
 # Load in crossvalidation data (running many split-halfs)
-crossval_dat = read.csv("../Modeling/output/strat_crossval/all_crossval.csv")
-crossval_ind_vs_rules = read.csv("../Modeling/output/strat_crossval/ind_strat_cv_comp.csv") %>% 
+crossval_dat = read.csv("../Modeling/anonymized_output/strat_crossval/all_crossval.csv")
+crossval_ind_vs_rules = read.csv("../Modeling/anonymized_output/strat_crossval/ind_strat_cv_comp.csv") %>% 
   mutate(dLLH = ModLLH_CV - RuleLLH_CV, dPhysLLH = ModLLH_CV - PhysOnlyLLH_CV) %>% 
   merge(complete_params %>% select(WID, Experiment, Rule=rules_Rule))
 # crossval_ind_vs_rules = read.csv("../Modeling/output/comb_strats/mod_vs_rules_llh.csv") %>% 
@@ -88,16 +86,16 @@ crossval_ind_vs_rules = read.csv("../Modeling/output/strat_crossval/ind_strat_cv
 #   merge(complete_params %>% select(WID, Experiment, Rule=rules_Rule))
 
 # Load in data for the Ferretti torque-difference replication
-ferretti_agg = loadFerrettiAgg('../Modeling/output/extensions_from_comb/base_strats_ferretti.csv')
-ferretti_raw = read.csv('../Modeling/models/ferretti/BB_FerrettiData.csv')
-rules_ferretti = loadFerrettiAgg('../Modeling/output/extensions_from_comb/rules_ferretti.csv')
+ferretti_agg = loadFerrettiAgg('../Modeling/anonymized_output/extensions_from_comb/base_strats_ferretti.csv')
+ferretti_raw = read.csv('../Modeling/anonymized_output/raw_data/BB_FerrettiData.csv')
+rules_ferretti = loadFerrettiAgg('../Modeling/anonymized_output/extensions_from_comb/rules_ferretti.csv')
 
 remove_rev = function(tnm) {
   spl = strsplit(tnm, '_')[[1]]
   spl = spl[1:(length(spl)-1)]
   return(paste(spl,collapse='_'))
 }
-comb_agg_full = read.csv('../Modeling/models/combined/BB_CombData.csv') %>%
+comb_agg_full = read.csv('../Modeling/anonymized_output/raw_data/BB_CombData.csv') %>%
   mutate(EmpLeft = 1*(NormResp=='L'), EmpBal = 1*(NormResp=='B'), EmpRight = 1*(NormResp=='R'),
          EmpAcc = 1*(as.character(NormResp)==as.character(CorrectResp)))
 caf_n = table(comb_agg_full$WID)
@@ -111,7 +109,7 @@ comb_agg_full = comb_agg_full %>% subset(WID %in% good_caf) %>%
 # Load in data for shifting strategy experiment & filter:
 #  a) People who don't have all trials recorded
 #  b) People who responded too quickly (< 1s on over half of trials, indicative of "clicking through")
-shift_raw_inp = read.csv("../Modeling/models/learn_benefit/BB_BeneData.csv") %>% 
+shift_raw_inp = read.csv("../Modeling/anonymized_output/raw_data/BB_BeneData.csv") %>% 
   mutate(Prioritizes = ifelse(TrialType == 'CD', ifelse(NormResp=='L', 'Dist', ifelse(NormResp=='R', 'Weight', 'Bal')),
                               ifelse(NormResp=='L', 'Weight', ifelse(NormResp=='R', 'Dist', 'Bal'))))
 
@@ -141,7 +139,7 @@ shift_raw_inp %>% group_by(WID, LearnTest) %>% count %>% filter(n == 180) %>% wi
 shift_raw %>% group_by(WID, LearnTest) %>% count %>% filter(n == 180) %>% with(table(LearnTest))
 
 
-shift_params_raw = read_json("../Modeling/output/learn_bene/base_strats_joint_percept_params.json")
+shift_params_raw = read_json("../Modeling/anonymized_output/learn_bene/base_strats_joint_percept_params.json")
 shift_strategies = data.frame(
   WID = goodwid_shift,
   Strat_SP = sapply(goodwid_shift, function(w){shift_params_raw$ind_strategies[[w]]$strat_params$sp}),
@@ -150,7 +148,7 @@ shift_strategies = data.frame(
 )
 rownames(shift_strategies) = NULL
 
-shift_mod = read.csv("../Modeling/output/learn_bene/base_strats_joint_percept_learnbene.csv")
+shift_mod = read.csv("../Modeling/anonymized_output/learn_bene/base_strats_joint_percept_learnbene.csv")
 
 shift_dat_all = shift_raw %>%
   #filter(IsLearning != "Learning") %>% 

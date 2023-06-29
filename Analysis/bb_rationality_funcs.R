@@ -9,18 +9,18 @@ library(RColorBrewer)
 library(jsonlite)
 
 
-rat_dat = read.csv("../Modeling/output/rationality/mod_predictions.csv") %>% 
+rat_dat = read.csv("../Modeling/anonymized_output/rationality/mod_predictions.csv") %>% 
   filter(Experiment != "combined")
 
-params = read_json('../Modeling/output/comb_strats/base_strats_all_params.json')
+params = read_json('../Modeling/anonymized_output/comb_strats/base_strats_all_params.json')
 
 FIT_WEIGHT_HEURISTIC = with(params$strategies, smp / (smp + sp))
 
 # Figure out the correct answer for these figures
-correct_falls = loadShapesAgg('../Modeling/output/comb_strats/base_strats_all_sh.csv') %>% select(Trial, Falls, Type) %>% mutate(Experiment='shapes') %>%
-  rbind(loadMatAgg('../Modeling/output/comb_strats/base_strats_all_mat.csv') %>% select(Trial, Falls, Type) %>% mutate(Experiment='materials')) %>% 
-  rbind(loadBalAgg('../Modeling/output/comb_strats/base_strats_all_bal.csv') %>% select(Trial, Falls, Type) %>% mutate(Experiment='pivot')) %>%
-  rbind(loadCombAgg('../Modeling/output/extensions_from_comb/base_strats_combined.csv') %>% select(Trial, Falls, Type) %>% mutate(Experiment='combined'))
+correct_falls = loadShapesAgg('../Modeling/anonymized_output/comb_strats/base_strats_all_sh.csv') %>% select(Trial, Falls, Type) %>% mutate(Experiment='shapes') %>%
+  rbind(loadMatAgg('../Modeling/anonymized_output/comb_strats/base_strats_all_mat.csv') %>% select(Trial, Falls, Type) %>% mutate(Experiment='materials')) %>% 
+  rbind(loadBalAgg('../Modeling/anonymized_output/comb_strats/base_strats_all_bal.csv') %>% select(Trial, Falls, Type) %>% mutate(Experiment='pivot')) %>%
+  rbind(loadCombAgg('../Modeling/anonymized_output/extensions_from_comb/base_strats_combined.csv') %>% select(Trial, Falls, Type) %>% mutate(Experiment='combined'))
 
 rat_dat = merge(rat_dat, correct_falls)
 
