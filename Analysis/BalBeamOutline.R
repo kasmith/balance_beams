@@ -243,14 +243,6 @@ cv_indcomp_agg = crossval_ind_vs_rules %>%
   ungroup
 
 
-# cv_rules = read.csv('output/crossval_rules/cv_llh_grid.csv') %>%
-#   rbind(read.csv('output/crossval_rules_v2/cv_llh_grid.csv') %>% mutate(Order = Order + 25)) %>%
-#   gather(WID, LLH, -Order, -Model) %>% spread(Model, LLH) %>% mutate(dLLH = Sim - Rule)
-# 
-# cv_rule_choices = read.csv('output/crossval_rules/rule_choices.csv', colClasses="character") %>%
-#   gather(WID, Rule, -Order) %>% group_by(WID) %>%
-#   summarize(Rule1 = mean(Rule=="1"), Rule2 = mean(Rule=="2"), Rule3 = mean(Rule=="3"), Rule3a = mean(Rule=="3a"), Rule4 = mean(Rule=="4"))
-
 
 
 #+ ToDos -----------------------
@@ -258,76 +250,7 @@ cv_indcomp_agg = crossval_ind_vs_rules %>%
 
 #+ Intro ----------------------------------------
 
-#' # Introduction
-#' 
-#' REDO!!!
-#' 
-#' Notes from JBT:
-#' 
-#' * Start w/ physics as an important question in of itself
-#' * Three important nexus questions re: physics:
-#'     1. Rich models vs. fast & frugal
-#'     2. Qualitative vs. quantitative
-#'     3. Imagery vs. rules
-#' * Our point should be that everyone makes good points
-#' * Cite Holyoak (look into his physics stuff)
-#' * Balance beams: lots of models (incl. Act-R, connectionist, rule-based, etc.)
-#' 
-#' ## Big picture
-#' 
-#' * Long history of debate about whether mental processes are based on imagery or 
-#' amodal rules (e.g., Anderson 78)
-#' * It can be hard to tell these apart
-#' * But it could also be that cognition relies on both mechanism
-#' * This is particularly salient in physical reasoning, making it a good test bed
-#'     + Some argue for rules (e.g., Siegler, diSessa (?))
-#'     + Some argue for imagery / simulation (e.g., Schwartz, Hegarty, BHT)
-#' * We propose reasoning about the world relies on hybrids of imagery & rules
-#'     + Heuristics / rules may save effort, but might not always be applicable
-#'     + Imagery / simulation make take more cognitive effort, but works more generally
-#' 
-#' ## Mental imagery in physical reasoning
-#' 
-#' * History and evidence for imagery
-#' * Criticisms of imagery (e.g. Marcus & Davis)
-#' 
-#' ## Rule-based physical reasoning
-#' 
-#' * History and evidence (fit Siegler in)
-#' * Criticisms
-#' 
-#' ## Hybrid physical reasoning
-#' 
-#' * Schwartz & Black '96 learning rules from simulation
-#' * Hegarty '04
-#' * These make either/or claims -- using one or the other
-#' * Our proposal: people use both to make predictions about the world
-#'     + (TO DISCUSS)
-#'     + Rules only apply in some situations but provide a certain answer, may be easier to apply
-#'     + Simulation applies generally, but is noisy, may require greater cognitive costs
-#'     + Meta-reasoning might therefore suggest that when applicable rules should be applied first, then simulation
-#' 
-#' ## Test case: balance beams
-#' 
-#' * Typically reasoning about beams has been thought to be rule based
-#'     + Start with Siegler & proposed "types"
-#'     + Problems with Siegler's classification: deterministic but people are not
-#'     + (Other updates)
-#' * But also hard to see how simulation can account for this
-#'     + Siegler's final stage is indistinguishable from noiseless simulation
-#'     + However, unbiased noisy simulation cannot explain earlier 'stages'
-#' * Yet balance beams seem like a special case of Battaglia's towers
-#'     + Similarities: both involve judging how stacks of blocks will fall
-#'     + Differences: beams have more regular structure -- rules more applicable?
-#' * Predictions:
-#'     + As rules become less applicable, people are more likely to rely on simulation
-#'     + Changing the structure of the beam (shape/materials/strut) reduces regularity, rules
-#'     + This should cause people to be more inaccurate when rules help, more accurate when they hurt
-#'     + We should also be able to explain judgments as a mix of simulation & rules
-#'     + And this may explain individual differences: propensity to rely on rules rather than just what is known
-#'     + (OUTSTANDING: how do we deal with distance rules? Mostly ignore?)
-#'  * NOTE IN HERE: Consistency criterion (Reese 1989) -- but is it really consistent?
-#'
+
 
 #+ Experiments --------------------------------------------
 
@@ -982,7 +905,7 @@ print(max((rules_ind_bal %>% filter(Type %in% c('CB','CD','CW'), StrutWidth== .2
 #' 
 
 
-bratstrat_fl = "../Modeling/output/rationality/basic_strats.RData"
+bratstrat_fl = "../Modeling/anonymized_output/rationality/basic_strats.RData"
 if(file.exists(bratstrat_fl)) {
   load(bratstrat_fl)
 } else {
@@ -1072,7 +995,7 @@ plt_present_intermediate_ratplot =
 
 
 
-dratstrat_fl = "../Modeling/output/rationality/rate_strats.RData"
+dratstrat_fl = "../Modeling/anonymized_output/rationality/rate_strats.RData"
 if(file.exists(dratstrat_fl)) {
   load(dratstrat_fl)
 } else {
@@ -1081,7 +1004,7 @@ if(file.exists(dratstrat_fl)) {
   save(strats_rate_for_all, strats_rate_for_simple, file=(dratstrat_fl))
 }
 
-ratstrat_wd_fl = "../Modeling/output/rationality/dist_strats.RData"
+ratstrat_wd_fl = "../Modeling/anonymized_output/rationality/dist_strats.RData"
 if(file.exists(ratstrat_wd_fl)) {
   load(ratstrat_wd_fl)
 } else {
@@ -1114,7 +1037,7 @@ for (stratgroup in unique(ratstrat_wd_calc_agg$Group)) {
 }
 
 
-stratmix_fl = "../Modeling/output/rationality/mixes.RData"
+stratmix_fl = "../Modeling/anonymized_output/rationality/mixes.RData"
 if(file.exists(stratmix_fl)) {
   load(stratmix_fl)
 } else {
@@ -1190,101 +1113,6 @@ print(xtable::xtable(comb_noise_ceils %>% select(Condition, Noise_Ceiling, Mod_H
 
 comb_choices = plot_choices(comb_agg, 'NConds','Type',4)
 print(comb_choices)
-
-#' #' It also explains choices well
-#' 
-#' 
-#' #' Altogether suggests that the model generalizes well (but note not perfect -- perhaps pick out the uncentered balance trials?)
-#' 
-#' comb_comp_rules = comb_agg %>% mutate(ModLLH = LLH) %>% 
-#'   select(Trial, NConds, Type, Materials, Centering, StrutWidth, ShapeType, EmpAcc, ModAcc, ModLLH) %>%
-#'   merge(rules_comb %>% mutate(RulesLLH = LLH, RulesAcc = ModAcc) %>% select(Trial, RulesAcc, RulesLLH))
-#' 
-#' comb_comp_rules %>% group_by(NConds) %>% 
-#'   summarize(MLLH = sum(ModLLH), RLLH= sum(RulesLLH), 
-#'             AvgMBetter = mean(ModLLH > RulesLLH))
-#' 
-#' boot_comb_comp = function(dat) {
-#'   trs = sample.int(nrow(dat), replace=T)
-#'   ndat = dat[trs,]
-#'   return(with(ndat, c(cor(EmpAcc, ModAcc), cor(EmpAcc, RulesAcc), 
-#'                       sum((EmpAcc-ModAcc)^2), sum((EmpAcc-RulesAcc)^2))))
-#' }
-#' boot_comb_llh_diff = function(dat) {
-#'   trs = sample.int(nrow(dat), replace=T)
-#'   ndat = dat[trs,]
-#'   return(with(ndat, sum(ModLLH - RulesLLH)))
-#' }
-#' overall_comb_boot_llh_diff = replicate(500, boot_comb_llh_diff(comb_comp_rules))
-#' 
-#' overall_comb_boot_comp = replicate(500, boot_comb_comp(comb_comp_rules))
-#' 
-#' c0_comb_boot_comp = replicate(500, boot_comb_comp(comb_comp_rules %>% filter(NConds == 0)))
-#' c1_comb_boot_comp = replicate(500, boot_comb_comp(comb_comp_rules %>% filter(NConds == 1)))
-#' c2_comb_boot_comp = replicate(500, boot_comb_comp(comb_comp_rules %>% filter(NConds == 2)))
-#' c3_comb_boot_comp = replicate(500, boot_comb_comp(comb_comp_rules %>% filter(NConds == 3)))
-#' c4_comb_boot_comp = replicate(500, boot_comb_comp(comb_comp_rules %>% filter(NConds == 4)))
-#' 
-#' sh_rules_and_full = sapply(0:4, function(x) {boot_compare_vs_rules_and_model(comb_agg_full %>% filter(NConds == x),
-#'                                                                              comb_agg %>% filter(NConds == x),
-#'                                                                              rules_comb %>% filter(NConds == x),
-#'                                                                              500)})
-#' sh_rules_and_full_df = data.frame(Changes = c('Standard', '1 Change', paste(2:4, "Changes"))) %>%
-#'   cbind(data.frame(t(sh_rules_and_full)))
-#' #' Testing how well this compares to rules model -- & degredation with changes
-#' kable(sh_rules_and_full_df)
-#' print(xtable::xtable(sh_rules_and_full_df, signif = 2),
-#'       include.rownames = F)
-#' 
-#' 
-#' sh_mse_rules_and_full = sapply(0:4, function(x) {boot_mse_rules_and_model(comb_agg_full %>% filter(NConds == x),
-#'                                                                                  comb_agg %>% filter(NConds == x),
-#'                                                                                  rules_comb %>% filter(NConds == x),
-#'                                                                                  500)})
-#' sh_mse_rules_and_full_df = data.frame(Changes = c('Standard', '1 Change', paste(2:4, "Changes"))) %>%
-#'   cbind(data.frame(t(sh_mse_rules_and_full))) %>%
-#'   mutate(NTrials = sapply(0:4, function(x) {nrow(comb_agg %>% filter(NConds == x))})) %>%
-#'   mutate(SH_PT = SplitHalf / NTrials, VsMod_PT = VsMod / NTrials, VsRules_PT = VsRules / NTrials)
-#' 
-#' #' Looking at individual rules
-#' #' 
-#' 
-#' cv_comb_weight_rule_choice = cv_comb_weight %>% group_by(WID) %>%
-#'   summarize(Rule1 = mean(RuleChoice == 'R1'), Rule2 = mean(RuleChoice == 'R2'), Rule3 = mean(RuleChoice == 'R3'),
-#'             Add = mean(RuleChoice == 'R3a'), Rule4 = mean(RuleChoice == 'R4')) %>%
-#'   gather('Rule','Pct',-WID) %>%
-#'   group_by(WID) %>% filter(Pct == max(Pct))
-#' 
-#' cv_comb_weight_agg = cv_comb_weight %>% group_by(WID) %>%
-#'   summarize(dLLH = mean(CVLLH_Delta), lower = quantile(CVLLH_Delta, .1), upper = quantile(CVLLH_Delta, .9)) %>%
-#'   merge(cv_comb_weight_rule_choice %>% select(-Pct)) %>%
-#'   mutate(Rule = factor(Rule, levels=c('Rule1','Rule2','Rule3','Add','Rule4'))) %>%
-#'   arrange(Rule, dLLH) %>% mutate(Ord = 1:length(WID))
-#' 
-#' comb_ruleinfo = data.frame(names = unique(cv_comb_weight_agg$Rule), y=12)
-#' comb_ruleadds = 4*(1:nrow(comb_ruleinfo))
-#' names(comb_ruleadds) = comb_ruleinfo$names
-#' cv_comb_weight_agg$plotidx = with(cv_comb_weight_agg, Ord + ruleadds[Rule])
-#' comb_rulebreaks = sapply(comb_ruleinfo$names[-1],function(r){with(subset(cv_comb_weight_agg,Rule==r),min(plotidx)-2)})
-#' comb_ruleinfo$mids = sapply(comb_ruleinfo$names, function(r){with(subset(cv_comb_weight_agg,Rule==r), mean(plotidx))})
-#' plot_comb_rulediff = ggplot(cv_comb_weight_agg, aes(x=plotidx,y=dLLH,ymin=lower,ymax=upper)) + 
-#'   geom_hline(yintercept=0, linetype='dashed') +
-#'   geom_vline(xintercept=comb_rulebreaks, linetype='solid') +
-#'   geom_linerange() + geom_point() +
-#'   geom_text(aes(x=mids,y=y,ymin=y,ymax=y,label=names,color=NULL), data=comb_ruleinfo) +
-#'   theme_bw() +
-#'   theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank()) +
-#'   ylab(expression(paste(Delta,LLH (Hybrid - Rules))))
-#' 
-#' plot_comb_rulediff
-#' 
-#' #' CV hybrid N vs rules: `r sum(cv_comb_weight_agg$dLLH > 0)` vs `r sum(cv_comb_weight_agg$dLLH < 0)`
-#' #'
-#' #' CV rules better at 80% CI: `r sum(cv_comb_weight_agg$upper < 0)`
-#' #' 
-#' #' CV hybrid better at 80% CI: `r sum(cv_comb_weight_agg$lower > 0)`
-
-
 
 #+ Ferretti replication -------------------------------
 #' # Experiment 5: explaining torque differences (replicating Ferretti et al '86)
@@ -1483,31 +1311,6 @@ ggplot(siegler_type_full %>% group_by(WID, Type, Experiment) %>% summarize(Acc =
        aes(x=Acc, fill = Experiment)) + geom_histogram(binwidth = .2) + facet_grid(.~Type)
 
 
-#' Comparison to Ferretti et al (86) -- differences by how extreme torque differences are. Uses numbers pulled directly from
-#' the model (though reduces lapse rate to ~0 -- all else are perfectly equivalent)
-#' 
-#' ![Data from Ferretti et al (1986)](FerrettiRough.png)
-#' 
-#' ferretti_dat = merge(read.csv('ComparisonTrials/FerrettiFit.csv'), read.csv('ComparisonTrials/FerrettiSummary.csv'))
-#' 
-#' ggplot(ferretti_dat %>% group_by(Type,DiffAmt) %>% summarize(Acc = mean(ModLeft)), 
-#'        aes(x = DiffAmt, y = Acc, group = Type, color = Type)) + geom_line() + theme_bw() + ylim(c(0,1)) + 
-#'   xlab('Difference Level') + ylab('Accuracy')
-#' 
-#' #' Comparison to Boom et al (01)
-#' get_boom_type = function(t) {
-#'   return(strsplit(as.character(t),'_')[[1]][1])
-#' }
-#' 
-#' boom_dat = read.csv('ComparisonTrials/BoomFit.csv') %>% gather(MassHeurP, Accuracy, -Trial)
-#' boom_dat$Type = factor(sapply(boom_dat$Trial, get_boom_type), levels = c('Dist','CW','CD','CB'))
-#' boom_dat$Trial = factor(boom_dat$Trial, levels = c(paste('Dist',1:5,sep='_'), paste('CW',1:5,sep='_'),
-#'                                                    paste('CD',1:5, sep='_'), paste('CB',1:5,sep='_')))
-#' boom_dat = boom_dat %>% select(Type, Trial, MassHeurP, Accuracy) %>% arrange(MassHeurP, Type, Trial)
-#' 
-#' #ggplot(boom_dat %>% subset(MassHeurP == 'MPH_10'), aes(x = Trial, y = Accuracy, group = Type)) + geom_line()
-#' 
-
 
 
 #+ APPENDIX ------------
@@ -1625,8 +1428,6 @@ add1_crossval_plot = ggplot(cv_vsadd1_agg,
 
 print(add1_crossval_plot)
 
-# NEED TO DO THE SAME FOR CROSSVAL: FITTYPE --------
-
 #+ Geometric analysis ---------------------------------------------------
 
 #' # Experiment 5: Physical simulation versus configural processing
@@ -1699,8 +1500,6 @@ print(geomat_agg_comp_plot)
 geomat_agg_choices_plot = plot_choices(geomat_agg, 'Material', 'Type', 4)
 print(geomat_agg_choices_plot)
 
-#' KAS Question: Should we put in the "geometric only" model here? Doesn't add much (since it can't fit differences) but 
-#' might be good to be thorough...
 #' 
 #' With the geometric model, things aren't explained as well (r = `r with(geomat_geom, cor(ModAcc, EmpAcc))`, 
 #' r(pure) = `r with(subset(geomat_geom, Material=='Pure'), cor(ModAcc, EmpAcc))`, r(mixed) = 
@@ -1729,10 +1528,6 @@ plot_geomat_acc_emp_match = ggplot(agg_matches %>% select(MatchBase,Type,Materia
   geom_point() + theme_bw() + xlab("Accuracy (Pure)") + ylab("Accuracy (Mixed)")
 print(plot_geomat_acc_emp_match)
 
-
-#ggplot(agg_matches %>% select(MatchBase,Type,Materials,Left) %>% spread(Materials, Left), aes(x=Pure, y=Mixed, color=Type)) + geom_point() + theme_bw()
-#ggplot(agg_matches %>% select(MatchBase,Type,Materials,Right) %>% spread(Materials, Right), aes(x=Pure, y=Mixed, color=Type)) + geom_point() + theme_bw()
-#ggplot(agg_matches %>% select(MatchBase,Type,Materials,PFAcc) %>% spread(Materials, PFAcc), aes(x=Pure, y=Mixed, color=Type)) + geom_point() + theme_bw()
 
 
 #+ Exports ------------------------------------------
