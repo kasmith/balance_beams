@@ -7,7 +7,7 @@ datflnm = os.path.join(fldir, "BB_CombData.csv")
 combined_trials = dict()
 for flnm in os.listdir(trialdir):
     if flnm[-5:] == '.json' and flnm[:5] != 'Intro' and flnm[-6:] != 'R.json':  # NOTE: EXCLUDES INTRO TRIALS
-        fl = open(os.path.join(trialdir, flnm), 'rU')
+        fl = open(os.path.join(trialdir, flnm), 'r')
         if flnm[-6:] == 'N.json':
             trnm = flnm[:-7]
         else:
@@ -20,7 +20,7 @@ for flnm in os.listdir(trialdir):
 
 
 # Read empirical data
-datfl = open(datflnm,'rU')
+datfl = open(datflnm,'r')
 next(datfl)
 combined_empirical = dict()
 for ln in datfl:

@@ -7,7 +7,7 @@ import os
 ######
 
 cfg_fl = os.path.join(os.path.dirname(__file__), "config.txt")
-cf = open(cfg_fl, 'rU')
+cf = open(cfg_fl, 'r')
 cfg_dict = dict()
 for ln in cf:
     pn, tp = ln.strip('\n').split(':')
@@ -68,7 +68,7 @@ def params_mod_2_rules(params, doadd=True):
 
 
 def read_def_params(flnm):
-    fl = open(flnm, 'rU')
+    fl = open(flnm, 'r')
     l = next(fl).split(',')
     if not len(l) == 5:
         raise Exception('Not properly formatted parameter file')

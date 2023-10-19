@@ -23,7 +23,7 @@ learnbene_trials = dict()
 learnbene_training_trials = dict()
 for flnm in os.listdir(trialdir):
     if flnm[-5:] == '.json' and flnm[:4] == 'Test' and flnm[-6:] != 'R.json':  # NOTE: EXCLUDES INTRO / LEARNIN TRIALS
-        fl = open(os.path.join(trialdir, flnm), 'rU')
+        fl = open(os.path.join(trialdir, flnm), 'r')
         if flnm[-6:] == 'N.json':
             trnm = flnm[:-7]
         else:
@@ -32,7 +32,7 @@ for flnm in os.listdir(trialdir):
         learnbene_trials[trnm] = read_materials_beam(jsn)
         fl.close()
     if flnm[-5:] == '.json' and flnm[:5] == 'Learn' and flnm[-6:] != 'R.json':  # NOTE: EXCLUDES INTRO / LEARNIN TRIALS
-        fl = open(os.path.join(trialdir, flnm), 'rU')
+        fl = open(os.path.join(trialdir, flnm), 'r')
         if flnm[-6:] == 'N.json':
             trnm = flnm[:-7]
         else:
@@ -41,7 +41,7 @@ for flnm in os.listdir(trialdir):
         learnbene_training_trials[trnm] = read_materials_beam(jsn)
         fl.close()
 
-datfl = open(datflnm,'rU')
+datfl = open(datflnm,'r')
 next(datfl)
 learnbene_empirical = dict()
 learnbene_rts = dict()

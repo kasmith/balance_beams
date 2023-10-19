@@ -24,7 +24,8 @@ strategy_types = {
     'no_weight': make_type_defs('sp'),
     'just_sp': ['sp'],
     'just_smp': ['smp'],
-    'rules': []
+    'rules': [],
+    'just_phys': ['p']
 }
 
 for stp in MSP_MOD_TYPES:
@@ -38,7 +39,7 @@ parser = argparse.ArgumentParser(description="Run model fitting for balance beam
 parser.add_argument('-o', '--output', help="Destination file for model output",
                     default=None, type=str)
 parser.add_argument('-i', '--init_parameters', help="Filename for parameter initialization (optional)",
-                    required=True, type=argparse.FileType('rU'))
+                    required=True, type=argparse.FileType('r'))
 parser.add_argument('-t', '--type', help="The type of beams model to fit",
                     default='shapes', choices=['shapes','materials','balance',
                                                'geomat','combined', 'ferretti',

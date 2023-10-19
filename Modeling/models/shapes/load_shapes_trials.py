@@ -28,14 +28,14 @@ def read_shapes_side(side):
 shapes_trials = dict()
 for flnm in os.listdir(trialdir):
     if flnm[-6:] == 'N.json' and flnm[:5] != 'Intro':  # NOTE: EXCLUDES INTRO TRIALS
-        fl = open(os.path.join(trialdir, flnm), 'rU')
+        fl = open(os.path.join(trialdir, flnm), 'r')
         trnm = flnm[:-5]
         jsn = json.load(fl)
         shapes_trials[trnm] = read_shapes_side(jsn['Left']) + [(b, m, -d) for b,m,d in read_shapes_side(jsn['Right'])]
         fl.close()
 
 # Read empirical data
-datfl = open(datflnm,'rU')
+datfl = open(datflnm,'r')
 next(datfl)
 shapes_empirical = dict()
 shapes_emp_order = dict()
